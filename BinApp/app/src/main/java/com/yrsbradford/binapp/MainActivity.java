@@ -2,8 +2,12 @@ package com.yrsbradford.binapp;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,14 +15,20 @@ import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
 
-    private File details = new File("login.dat");
+    private File details;
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: read file
+        details = new File(this.getApplicationContext().getFilesDir().getPath().toString()+"/login.dat");
+
+        System.out.println("Running BinApp");
+
+        //TODO: use session key
 
         if(!details.exists()){
 
@@ -30,11 +40,18 @@ public class MainActivity extends ActionBarActivity {
 
             //TODO: redirect to login page
         }else{
-            String contents = FileUtils.readFile(details);
-            
-        }
 
-        //TODO: decrypt file
+            String contents = FileUtils.readFile(details);
+            //TODO: decrypt file text
+
+            try {
+                JSONObject json = new JSONObject(contents);
+                username = json.get("username").toString();
+                password = json.get("password").toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         //TODO: authenticate
     }
@@ -59,5 +76,21 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        JSONObject save = new JSONObject();
+
+        try {
+            save.put("username", username);
+            save.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        FileUtils.writeFile(details, save.toString());
     }
 }

@@ -13,7 +13,7 @@ import java.io.OutputStream;
 
 public class FileUtils {
 
-	public static void writeFile(File file, String text) {
+	public static void writeFile(File file, String text){
 		try {
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
