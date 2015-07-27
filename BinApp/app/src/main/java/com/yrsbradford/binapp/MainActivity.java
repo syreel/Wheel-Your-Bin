@@ -1,5 +1,6 @@
 package com.yrsbradford.binapp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.JsonReader;
@@ -16,8 +17,8 @@ import java.io.IOException;
 public class MainActivity extends ActionBarActivity {
 
     private File details;
-    private String username;
-    private String password;
+    private String sessionToken;
+    private int ACTIVITY_CREATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,9 @@ public class MainActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
 
+            Intent intent = new Intent(this, Website.class);
+            startActivityForResult(intent, ACTIVITY_CREATE);
+
             //TODO: redirect to login page
         }else{
 
@@ -45,15 +49,18 @@ public class MainActivity extends ActionBarActivity {
             //TODO: decrypt file text
 
             try {
+
                 JSONObject json = new JSONObject(contents);
-                username = json.get("username").toString();
-                password = json.get("password").toString();
+
+                if(json.has("sessionToken")) {
+                    sessionToken = json.get("sessionToken").toString();
+                    //TODO: authenticate
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
-        //TODO: authenticate
     }
 
     @Override
@@ -85,8 +92,7 @@ public class MainActivity extends ActionBarActivity {
         JSONObject save = new JSONObject();
 
         try {
-            save.put("username", username);
-            save.put("password", password);
+            save.put("sessionToken", sessionToken);
         } catch (JSONException e) {
             e.printStackTrace();
         }
