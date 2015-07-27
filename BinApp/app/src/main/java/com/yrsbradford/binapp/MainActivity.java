@@ -29,6 +29,9 @@ public class MainActivity extends ActionBarActivity {
 
         System.out.println("Running BinApp");
 
+        Intent intent = new Intent(this, Website.class);
+        startActivityForResult(intent, ACTIVITY_CREATE);
+
         //TODO: use session key
 
         if(!details.exists()){
@@ -38,9 +41,6 @@ public class MainActivity extends ActionBarActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            Intent intent = new Intent(this, Website.class);
-            startActivityForResult(intent, ACTIVITY_CREATE);
 
             //TODO: redirect to login page
         }else{

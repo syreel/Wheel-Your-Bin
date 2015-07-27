@@ -15,7 +15,7 @@ public class Website extends ActionBarActivity {
         setContentView(R.layout.activity_website);
         
         WebView myWebView = (WebView) findViewById(R.id.webView);
-        myWebView.loadUrl("http://www.google.com");
+        myWebView.loadUrl("http://www.google.co.uk");
     }
 
     @Override
