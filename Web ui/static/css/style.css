@@ -2,3 +2,8 @@
 	width: 3em;
 	height: 3em;
 }
+
+#un-addon, #pwd-addon, #pwd2-addon {
+    min-width:100px;
+    text-align:left;
+}
