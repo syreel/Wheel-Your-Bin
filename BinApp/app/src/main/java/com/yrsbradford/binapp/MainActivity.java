@@ -28,7 +28,7 @@ import java.net.URLConnection;
 public class MainActivity extends ActionBarActivity implements LocationListener {
 
     private File details;
-    private String sessionToken;
+    private String username, sessionToken;
     private boolean loggedIn;
     private int ACTIVITY_CREATE = 0;
     private Transmit transmit;
@@ -61,13 +61,15 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
                 JSONObject json = new JSONObject(contents);
 
-                if(json.has("sessionToken")) {
+                if(json.has("username") && json.has("sessionToken")) {
 
+                    username = json.get("username").toString();
                     sessionToken = json.get("sessionToken").toString();
 
-                    if(WebUtils.isValidSessionToken(sessionToken)){
+                    if(WebUtils.isValidSessionToken(username, sessionToken)){
                         loggedIn = true;
                         redirect(Website.class);
+                        startSendingData();
                     }else{
                         redirect(LoginActivity.class);
                     }
@@ -77,6 +79,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                 e.printStackTrace();
             }
         }
+    }
+
+    private void redirect(Class activity){
+        Intent intent = new Intent(this, activity);
+        startActivityForResult(intent, ACTIVITY_CREATE);
+    }
+
+    private void startSendingData(){
 
         Handler handler = new Handler();
 
@@ -91,11 +101,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             }
 
         });
-    }
-
-    private void redirect(Class activity){
-        Intent intent = new Intent(this, activity);
-        startActivityForResult(intent, ACTIVITY_CREATE);
     }
 
     @Override
@@ -127,6 +132,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
         JSONObject save = new JSONObject();
 
         try {
+            save.put("username", username);
             save.put("sessionToken", sessionToken);
         } catch (JSONException e) {
             e.printStackTrace();

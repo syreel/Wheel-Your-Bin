@@ -53,9 +53,9 @@ public class WebUtils {
         }
     }
 
-    public static boolean isValidSessionToken(String token){
+    public static boolean isValidSessionToken(String username, String token){
 
-        String response = getTextFromPage(HOST+"/valid.php?token="+token);
+        String response = getTextFromPage(HOST+"/valid.php?username=" + username + "&token="+token);
 
         try {
             JSONObject json = new JSONObject(response);
