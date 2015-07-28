@@ -72,7 +72,7 @@ public class WebUtils {
         String response = getTextFromPage(HOST+"/login.php?username="+username+"&password="+password);
 
         try {
-            return new JSONObject(response);
+            return response != null? new JSONObject(response):null;
         } catch (JSONException e) {
             e.printStackTrace();
         }

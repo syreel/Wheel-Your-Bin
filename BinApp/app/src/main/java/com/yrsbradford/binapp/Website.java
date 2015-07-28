@@ -9,6 +9,10 @@ import android.webkit.WebView;
 
 public class Website extends ActionBarActivity {
 
+    public Website(){
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

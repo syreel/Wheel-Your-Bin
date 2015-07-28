@@ -24,8 +24,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
 
 public class MainActivity extends ActionBarActivity implements LocationListener {
+
+    private static MainActivity main;
+
+    public static MainActivity getMain() {
+        return main;
+    }
 
     private File details;
     private String username, sessionToken;
@@ -41,9 +50,11 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
         details = new File(this.getApplicationContext().getFilesDir().getPath().toString()+"/login.dat");
 
-        System.out.println("Running BinApp");
+        System.out.println("Creating BinApp");
 
         if(!details.exists()){
+
+            System.out.println("Creating details file");
 
             try {
                 details.createNewFile();
@@ -52,7 +63,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             }
 
             redirect(LoginActivity.class);
+
+            System.out.println("No session saved, redirecting to login page");
+
         }else{
+
+            System.out.println("Details file exists");
 
             String contents = FileUtils.readFile(details);
             //TODO: decrypt file text
@@ -70,9 +86,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                         loggedIn = true;
                         redirect(Website.class);
                         startSendingData();
+                        System.out.println("Now sending data");
                     }else{
                         redirect(LoginActivity.class);
+                        System.out.println("Session invalid, redirecting to login page");
                     }
+                }else{
+                    System.out.println("Session file was invalid, redirecting to login page");
+                    redirect(LoginActivity.class);
                 }
 
             } catch (JSONException e) {
@@ -81,14 +102,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
         }
     }
 
-    private void redirect(Class activity){
+    public void redirect(Class activity){
         Intent intent = new Intent(this, activity);
         startActivityForResult(intent, ACTIVITY_CREATE);
     }
 
-    private void startSendingData(){
+    public void startSendingData(){
 
-        Handler handler = new Handler();
+        final Handler handler = new Handler();
 
         handler.post(new Runnable(){
 

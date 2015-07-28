@@ -4,14 +4,57 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.yrsbradford.binapp.transmission.LoginEvent;
 
 
 public class LoginActivity extends ActionBarActivity {
+
+    private MainActivity main;
+
+    public LoginActivity(){
+        this.main = MainActivity.getMain();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        final TextView responseDisplay = (TextView) findViewById(R.id.textView3);
+        final Button loginButton = (Button) findViewById(R.id.button);
+
+        final EditText usernameField = (EditText) findViewById(R.id.editText);
+        final EditText passwordField = (EditText) findViewById(R.id.editText2);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                responseDisplay.setText("Connecting...");
+
+                (new Thread(){
+                    public void run(){
+
+                        LoginEvent event = new LoginEvent(usernameField.getText().toString(), passwordField.getText().toString());
+
+                        event.login();
+
+                        if(event.isValid()){
+                            main.redirect(Website.class);
+                            main.startSendingData();
+                        }else{
+                            responseDisplay.setText("Invalid username or password!");
+                        }
+                    }
+                }).start();
+            }
+        });
     }
 
     @Override
