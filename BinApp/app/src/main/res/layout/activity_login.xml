@@ -7,20 +7,11 @@
     tools:context="com.yrsbradford.binapp.LoginActivity"
     android:id="@+id/login">
 
-    <TextView android:text="@string/action_sign_in" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sign_in"
-        android:textSize="30sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
         android:inputType="text"
-        android:layout_below="@+id/sign_in"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="58dp"
@@ -33,10 +24,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView"
         android:textSize="30sp"
-        android:layout_below="@+id/sign_in"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="27dp" />
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
