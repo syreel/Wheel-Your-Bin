@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     }
 
     private File details;
-    private String username, sessionToken;
+    public String username, sessionToken;
     private boolean loggedIn;
     private int ACTIVITY_CREATE = 0;
     private Transmit transmit;
@@ -71,7 +71,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             System.out.println("Details file exists");
 
             String contents = FileUtils.readFile(details);
-            //TODO: decrypt file text
 
             try {
 

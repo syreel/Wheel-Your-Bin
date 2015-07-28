@@ -16,6 +16,7 @@ import com.yrsbradford.binapp.transmission.LoginEvent;
 public class LoginActivity extends ActionBarActivity {
 
     private MainActivity main;
+    private boolean connecting;
 
     public LoginActivity(){
         this.main = MainActivity.getMain();
@@ -25,7 +26,7 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         final TextView responseDisplay = (TextView) findViewById(R.id.textView3);
@@ -39,27 +40,38 @@ public class LoginActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
 
-                responseDisplay.setText("Connecting...");
+                if(!connecting) {
 
-                (new Thread() {
-                    public void run() {
+                    responseDisplay.setText("Connecting...");
+                    connecting = true;
 
-                        LoginEvent event = new LoginEvent(usernameField.getText().toString(), passwordField.getText().toString());
+                    (new Thread() {
+                        public void run() {
 
-                        event.login();
+                            LoginEvent event = new LoginEvent(usernameField.getText().toString(), passwordField.getText().toString());
 
-                        if (event.isValid()) {
-                            main.redirect(Website.class);
-                            main.startSendingData();
-                        } else {
-                            responseDisplay.post(new Runnable() {
-                                                     public void run() {
-                                                         responseDisplay.setText("Invalid username or password!");
-                                                     }
-                                                 });
+                            event.login();
+
+                            if (event.isValid()) {
+
+                                main.username = event.getUsername();
+                                main.sessionToken = event.getSessionToken();
+
+                                main.redirect(Website.class);
+                                main.startSendingData();
+
+                            } else {
+                                responseDisplay.post(new Runnable() {
+                                    public void run() {
+                                        responseDisplay.setText("Invalid username or password!");
+                                    }
+                                });
+                            }
+
+                            connecting = false;
                         }
-                    }
-                }).start();
+                    }).start();
+                }
             }
         });
     }
