@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +36,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 
-public class MainActivity extends ActionBarActivity implements LocationListener {
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private static MainActivity main;
 
@@ -55,7 +56,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
         setContentView(R.layout.activity_main);
         transmit = new Transmit();
 
-        details = new File(Environment.getExternalStorageDirectory() + File.separator + "login.dat");
+        //TODO: update with http://developer.android.com/training/basics/data-storage/files.html
+        details = new File(this.getBaseContext().getFilesDir(), "login.dat");
 
         log(Channel.INIT, "Creating BinApp");
 
@@ -110,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
     public void writeFile(File file, String text) {
         try {
-            FileOutputStream out = openFileOutput(file.getAbsolutePath(), MODE_PRIVATE);
+            FileOutputStream out = openFileOutput(file.getName(), MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(out);
             osw.write(text);
             osw.close();

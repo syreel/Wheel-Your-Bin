@@ -2,12 +2,13 @@ package com.yrsbradford.binapp;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
 
-public class Website extends ActionBarActivity {
+public class Website extends AppCompatActivity {
 
     public Website(){
 

@@ -5,6 +5,17 @@ package com.yrsbradford.binapp.transmission;
  */
 public class Timer {
 
+    /**
+     * Multiple bins
+     * Use this class
+     * Time till delivery
+     * List of bin objects
+     * UNIX timestamps or calendar system
+     * > repeats once per week, once per two weeks, monthly etc
+     * hashmap bins : times
+     * > save to file
+     */
+
     public static int MINUTE = 60;
     public static int HOUR = 3600;
     public static int DAY = 86400;
