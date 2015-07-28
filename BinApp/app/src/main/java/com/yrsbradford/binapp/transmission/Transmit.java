@@ -3,6 +3,8 @@ package com.yrsbradford.binapp.transmission;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 
+import com.yrsbradford.binapp.WebUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,21 +25,10 @@ public class Transmit {
     }
 
     /**
-     * Checks for whether or not we need to send data to the web server
-     * If so, it will send the data
+     * Sends the location data to the web server
      */
     public void onUpdate(){
-
-            JSONObject json = new JSONObject();
-
-            try {
-                json.put("longitude", longitude);
-                json.put("latitude", latitude);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            sendData(json);
+            sendData(longitude, latitude);
     }
 
     public void setData(double longitude, double latitude){
@@ -46,10 +37,11 @@ public class Transmit {
     }
 
     /**
-     * Sends the geographical data to the web server
-     * @param data an associative array of keys to values
+     * Sends the geographical location to the web server
+     * @param longitude the geographical longitude of the phone
+     * @param latitude the geographical latitude of the phone
      */
-    private void sendData(JSONObject data){
-        //TODO: make this work
+    private void sendData(double longitude, double latitude){
+        WebUtils.sendLocationData(longitude, latitude);
     }
 }

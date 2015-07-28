@@ -16,14 +16,20 @@ import com.yrsbradford.binapp.transmission.Transmit;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 
 public class MainActivity extends ActionBarActivity implements LocationListener {
 
     private File details;
     private String sessionToken;
+    private boolean loggedIn;
     private int ACTIVITY_CREATE = 0;
     private Transmit transmit;
 
@@ -37,11 +43,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
         System.out.println("Running BinApp");
 
-        Intent intent = new Intent(this, Website.class);
-        startActivityForResult(intent, ACTIVITY_CREATE);
-
-        //TODO: use session key
-
         if(!details.exists()){
 
             try {
@@ -50,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                 e.printStackTrace();
             }
 
-            //TODO: redirect to login page
+            redirect(LoginActivity.class);
         }else{
 
             String contents = FileUtils.readFile(details);
@@ -61,8 +62,15 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                 JSONObject json = new JSONObject(contents);
 
                 if(json.has("sessionToken")) {
+
                     sessionToken = json.get("sessionToken").toString();
-                    //TODO: authenticate
+
+                    if(WebUtils.isValidSessionToken(sessionToken)){
+                        loggedIn = true;
+                        redirect(Website.class);
+                    }else{
+                        redirect(LoginActivity.class);
+                    }
                 }
 
             } catch (JSONException e) {
@@ -83,6 +91,11 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             }
 
         });
+    }
+
+    private void redirect(Class activity){
+        Intent intent = new Intent(this, activity);
+        startActivityForResult(intent, ACTIVITY_CREATE);
     }
 
     @Override
