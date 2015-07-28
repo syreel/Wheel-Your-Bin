@@ -27,8 +27,8 @@ public class Transmit {
     /**
      * Sends the location data to the web server
      */
-    public void onUpdate(){
-            sendData(longitude, latitude);
+    public void onUpdate(String sessionKey){
+            sendData(longitude, latitude, sessionKey);
     }
 
     public void setData(double longitude, double latitude){
@@ -41,7 +41,7 @@ public class Transmit {
      * @param longitude the geographical longitude of the phone
      * @param latitude the geographical latitude of the phone
      */
-    private void sendData(double longitude, double latitude){
-        WebUtils.sendLocationData(longitude, latitude);
+    private void sendData(double longitude, double latitude, String sessionKey){
+        WebUtils.sendLocationData(longitude, latitude, sessionKey);
     }
 }

@@ -115,7 +115,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             @Override
             public void run() {
 
-                transmit.onUpdate();
+                transmit.onUpdate(sessionToken);
 
                 handler.postDelayed(this, Timer.MINUTE * 1000 * 10);
             }

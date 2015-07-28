@@ -15,7 +15,7 @@ import java.net.URLConnection;
  */
 public class WebUtils {
 
-    private static String HOST = "http://wheelyourbin.com";
+    public static String HOST = "http://wheelyourbin.com";
 
     public static String getTextFromPage(String websiteUrl){
 
@@ -80,7 +80,7 @@ public class WebUtils {
         return null;
     }
 
-    public static void sendLocationData(double longitude, double latitude){
-        connectToUrl(HOST+"/submit.php?longitude="+longitude+"&latitude="+latitude);
+    public static void sendLocationData(double longitude, double latitude, String sessionKey){
+        connectToUrl(HOST+"/submit.php?longitude="+longitude+"&latitude="+latitude+"&sessionKey="+sessionKey);
     }
 }
