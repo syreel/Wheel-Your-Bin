@@ -3,6 +3,7 @@ package com.yrsbradford.binapp;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -17,9 +18,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -48,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
         setContentView(R.layout.activity_main);
         transmit = new Transmit();
 
-        details = new File(this.getApplicationContext().getFilesDir().getPath().toString()+"/login.dat");
+        details = new File(Environment.getExternalStorageDirectory() + File.separator + "login.dat");
 
         log(Channel.INIT, "Creating BinApp");
 
@@ -70,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
             log(Channel.SAVE, "Details file exists");
 
-            String contents = FileUtils.readFile(details);
+            String contents = readFile(details);
 
             try {
 
@@ -99,6 +106,42 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                 e.printStackTrace();
             }
         }
+    }
+
+    public void writeFile(File file, String text) {
+        try {
+            FileOutputStream out = openFileOutput(file.getAbsolutePath(), MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(out);
+            osw.write(text);
+            osw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String readFile(File file){
+        try {
+            FileInputStream fIn = openFileInput(file.getAbsolutePath());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fIn));
+
+            String all = "";
+            String line;
+
+            while((line = reader.readLine()) != null){
+                all += line + "\r\n";
+            }
+
+            return all;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public void redirect(Class activity){
@@ -161,7 +204,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             e.printStackTrace();
         }
 
-        FileUtils.writeFile(details, save.toString());
+        writeFile(details, save.toString());
     }
 
     @Override
