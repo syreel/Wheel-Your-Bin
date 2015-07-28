@@ -1,11 +1,17 @@
 package com.yrsbradford.binapp;
 
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.JsonReader;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.yrsbradford.binapp.transmission.Timer;
+import com.yrsbradford.binapp.transmission.Transmit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,16 +20,18 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LocationListener {
 
     private File details;
     private String sessionToken;
     private int ACTIVITY_CREATE = 0;
+    private Transmit transmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        transmit = new Transmit();
 
         details = new File(this.getApplicationContext().getFilesDir().getPath().toString()+"/login.dat");
 
@@ -61,6 +69,20 @@ public class MainActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
+
+        Handler handler = new Handler();
+
+        handler.post(new Runnable(){
+
+            @Override
+            public void run() {
+
+                transmit.onUpdate();
+
+                handler.postDelayed(this, Timer.MINUTE * 1000 * 10);
+            }
+
+        });
     }
 
     @Override
@@ -98,5 +120,25 @@ public class MainActivity extends ActionBarActivity {
         }
 
         FileUtils.writeFile(details, save.toString());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        transmit.setData(location.getLongitude(), location.getLatitude());
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider){
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider){
+
     }
 }

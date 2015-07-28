@@ -1,5 +1,9 @@
 package com.yrsbradford.binapp.transmission;
 
+import android.location.LocationManager;
+import android.location.LocationProvider;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -10,16 +14,12 @@ public class Transmit {
     //TODO: Decide on this properly
     private static int UPDATE_TIME = Timer.MINUTE * 10;
 
-    private static Transmit instance = new Transmit();
-
     private Timer timer = new Timer();
-    
+
+    private double longitude, latitude;
+
     public Transmit(){
 
-    }
-
-    public static Transmit getInstance() {
-        return instance;
     }
 
     /**
@@ -28,13 +28,21 @@ public class Transmit {
      */
     public void onUpdate(){
 
-        if(timer.hasElapsed(UPDATE_TIME)){
+            JSONObject json = new JSONObject();
 
-            //TODO: send geographical data
+            try {
+                json.put("longitude", longitude);
+                json.put("latitude", latitude);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-            timer.reset();
-        }
+            sendData(json);
+    }
 
+    public void setData(double longitude, double latitude){
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     /**
