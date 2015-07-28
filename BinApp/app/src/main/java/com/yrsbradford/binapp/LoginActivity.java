@@ -27,6 +27,7 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Stops the keyboard from moving the layout up when typing in text fields
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         final TextView responseDisplay = (TextView) findViewById(R.id.textView3);
@@ -35,6 +36,7 @@ public class LoginActivity extends ActionBarActivity {
         final EditText usernameField = (EditText) findViewById(R.id.editText);
         final EditText passwordField = (EditText) findViewById(R.id.editText2);
 
+        //Listens for when the login button is clicked
         loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -61,6 +63,7 @@ public class LoginActivity extends ActionBarActivity {
                                 main.startSendingData();
 
                             } else {
+
                                 responseDisplay.post(new Runnable() {
                                     public void run() {
                                         responseDisplay.setText("Invalid username or password!");

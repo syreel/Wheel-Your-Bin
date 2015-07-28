@@ -50,11 +50,11 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
         details = new File(this.getApplicationContext().getFilesDir().getPath().toString()+"/login.dat");
 
-        System.out.println("Creating BinApp");
+        log(Channel.INIT, "Creating BinApp");
 
         if(!details.exists()){
 
-            System.out.println("Creating details file");
+            log(Channel.SAVE, "Creating details file");
 
             try {
                 details.createNewFile();
@@ -64,11 +64,11 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
             redirect(LoginActivity.class);
 
-            System.out.println("No session saved, redirecting to login page");
+            log(Channel.SAVE, "No session saved, redirecting to login page");
 
         }else{
 
-            System.out.println("Details file exists");
+            log(Channel.SAVE, "Details file exists");
 
             String contents = FileUtils.readFile(details);
 
@@ -85,13 +85,13 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                         loggedIn = true;
                         redirect(Website.class);
                         startSendingData();
-                        System.out.println("Now sending data");
+                        log(Channel.AUTH, "Now sending");
                     }else{
                         redirect(LoginActivity.class);
-                        System.out.println("Session invalid, redirecting to login page");
+                        log(Channel.AUTH, "Session invalid, redirecting to login page");
                     }
                 }else{
-                    System.out.println("Session file was invalid, redirecting to login page");
+                    log(Channel.SAVE, "Session file was invalid, redirecting to login page");
                     redirect(LoginActivity.class);
                 }
 
@@ -102,6 +102,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     }
 
     public void redirect(Class activity){
+
+        log(Channel.NONE, "Redirecting to activity: " + activity.getSimpleName());
+
         Intent intent = new Intent(this, activity);
         startActivityForResult(intent, ACTIVITY_CREATE);
     }
@@ -110,13 +113,13 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
         final Handler handler = new Handler();
 
-        handler.post(new Runnable(){
+        handler.post(new Runnable() {
 
             @Override
             public void run() {
 
+                log(Channel.GPS, "Updating transmitter");
                 transmit.onUpdate(sessionToken);
-
                 handler.postDelayed(this, Timer.MINUTE * 1000 * 10);
             }
 
@@ -173,11 +176,15 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
     @Override
     public void onProviderEnabled(String provider){
-
+        log(Channel.GPS, "Provider enabled");
     }
 
     @Override
     public void onProviderDisabled(String provider){
 
+    }
+
+    public void log(Channel channel, String info){
+        System.out.println("["+channel.getName()+"] "+info);
     }
 }
