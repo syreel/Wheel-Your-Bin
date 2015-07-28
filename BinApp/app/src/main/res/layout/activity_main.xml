@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:contentDescription="@string/logo"
-        android:src="@drawable/mountain"
+        android:src="@drawable/logo"
         android:layout_above="@+id/title"
         android:layout_alignRight="@+id/title"
         android:layout_alignEnd="@+id/title"
