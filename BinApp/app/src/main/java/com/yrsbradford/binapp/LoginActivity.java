@@ -38,18 +38,22 @@ public class LoginActivity extends ActionBarActivity {
 
                 responseDisplay.setText("Connecting...");
 
-                (new Thread(){
-                    public void run(){
+                (new Thread() {
+                    public void run() {
 
                         LoginEvent event = new LoginEvent(usernameField.getText().toString(), passwordField.getText().toString());
 
                         event.login();
 
-                        if(event.isValid()){
+                        if (event.isValid()) {
                             main.redirect(Website.class);
                             main.startSendingData();
-                        }else{
-                            responseDisplay.setText("Invalid username or password!");
+                        } else {
+                            responseDisplay.post(new Runnable() {
+                                                     public void run() {
+                                                         responseDisplay.setText("Invalid username or password!");
+                                                     }
+                                                 });
                         }
                     }
                 }).start();
