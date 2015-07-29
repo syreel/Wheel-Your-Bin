@@ -45,16 +45,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     private File details;
-    public String username, sessionToken;
     private boolean loggedIn;
+    public String username, sessionToken;
     private int ACTIVITY_CREATE = 0;
-    private Transmit transmit;
+    public static Transmit transmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        transmit = new Transmit();
+
+        main = this;
+
+        if(transmit == null) {
+            transmit = new Transmit();
+        }
 
         //TODO: update with http://developer.android.com/training/basics/data-storage/files.html
         details = new File(this.getBaseContext().getFilesDir(), "login.dat");
@@ -87,18 +92,25 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
                 if(json.has("username") && json.has("sessionToken")) {
 
-                    username = json.get("username").toString();
-                    sessionToken = json.get("sessionToken").toString();
+                    MainActivity.getMain().username = json.get("username").toString();
+                    MainActivity.getMain().sessionToken = json.get("sessionToken").toString();
 
-                    if(WebUtils.isValidSessionToken(username, sessionToken)){
-                        loggedIn = true;
-                        redirect(Website.class);
-                        startSendingData();
-                        log(Channel.AUTH, "Now sending");
-                    }else{
-                        redirect(LoginActivity.class);
-                        log(Channel.AUTH, "Session invalid, redirecting to login page");
-                    }
+                    (new Thread(){
+                        public void run(){
+
+                            if(WebUtils.isValidSessionToken(MainActivity.getMain().username, MainActivity.getMain().sessionToken)){
+                                loggedIn = true;
+                                redirect(Website.class);
+                                startSendingData();
+                                log(Channel.AUTH, "Now sending");
+                            }else{
+                                redirect(LoginActivity.class);
+                                log(Channel.AUTH, "Session invalid, redirecting to login page");
+                            }
+
+                        }
+                    }).start();
+
                 }else{
                     log(Channel.SAVE, "Session file was invalid, redirecting to login page");
                     redirect(LoginActivity.class);
@@ -112,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     public void writeFile(File file, String text) {
         try {
-            FileOutputStream out = openFileOutput(file.getName(), MODE_PRIVATE);
+            FileOutputStream out = new FileOutputStream(file);
             OutputStreamWriter osw = new OutputStreamWriter(out);
             osw.write(text);
             osw.close();
@@ -125,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     public String readFile(File file){
         try {
-            FileInputStream fIn = openFileInput(file.getAbsolutePath());
+            FileInputStream fIn = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fIn));
 
             String all = "";
@@ -164,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void run() {
 
                 log(Channel.GPS, "Updating transmitter");
-                transmit.onUpdate(sessionToken);
-                handler.postDelayed(this, Timer.MINUTE * 1000 * 10);
+                transmit.onUpdate(MainActivity.getMain().sessionToken);
+                handler.postDelayed(this, 1000 * 10);
             }
 
         });
@@ -200,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         JSONObject save = new JSONObject();
 
         try {
-            save.put("username", username);
-            save.put("sessionToken", sessionToken);
+            save.put("username", MainActivity.getMain().username);
+            save.put("sessionToken", MainActivity.getMain().sessionToken);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -221,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onProviderEnabled(String provider){
-        log(Channel.GPS, "Provider enabled");
+        log(Channel.GPS, "Provider enabled: "+provider);
     }
 
     @Override

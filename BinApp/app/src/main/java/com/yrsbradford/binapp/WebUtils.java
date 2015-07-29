@@ -15,7 +15,7 @@ import java.net.URLConnection;
  */
 public class WebUtils {
 
-    public static String HOST = "http://wheelyourbin.com";
+    public static String HOST = "http://yawk.net";
 
     public static String getTextFromPage(String websiteUrl){
 
@@ -57,11 +57,15 @@ public class WebUtils {
 
         String response = getTextFromPage(HOST+"/valid.php?username=" + username + "&token="+token);
 
-        try {
-            JSONObject json = new JSONObject(response);
-            return json.getBoolean("status");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(response != null && response.length() > 0) {
+            try {
+                JSONObject json = new JSONObject(response);
+                return json.has("status") && json.getBoolean("status");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else{
+            return false;
         }
 
         return false;

@@ -1,5 +1,7 @@
 package com.yrsbradford.binapp;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yrsbradford.binapp.transmission.LoginEvent;
+import com.yrsbradford.binapp.transmission.Timer;
+import com.yrsbradford.binapp.transmission.Transmit;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -51,17 +55,23 @@ public class LoginActivity extends AppCompatActivity {
                     (new Thread() {
                         public void run() {
 
-                            LoginEvent event = new LoginEvent(usernameField.getText().toString(), passwordField.getText().toString());
+                            final LoginEvent event = new LoginEvent(usernameField.getText().toString(), passwordField.getText().toString());
 
                             event.login();
 
                             if (event.isValid()) {
 
-                                main.username = event.getUsername();
-                                main.sessionToken = event.getSessionToken();
+                                MainActivity.getMain().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
 
-                                main.redirect(Website.class);
-                                main.startSendingData();
+                                        MainActivity.getMain().username = event.getUsername();
+                                        MainActivity.getMain().sessionToken = event.getSessionToken();
+
+                                        MainActivity.getMain().redirect(Website.class);
+                                        MainActivity.getMain().startSendingData();
+                                    }
+                                });
 
                             } else {
 

@@ -1,5 +1,7 @@
 package com.yrsbradford.binapp.transmission;
 
+import com.yrsbradford.binapp.Channel;
+import com.yrsbradford.binapp.MainActivity;
 import com.yrsbradford.binapp.WebUtils;
 
 import org.json.JSONException;
