@@ -48,7 +48,7 @@ public class Transmit {
                     MainActivity.getMain().log(Channel.GPS, "Location data not sent");
                 }
 
-                String response = WebUtils.getTextFromPage(WebUtils.HOST+"/alerts.php");
+                String response = WebUtils.getTextFromPage(WebUtils.HOST+"/alerts.php&token="+MainActivity.getMain().sessionToken);
 
                 if(response != null && response.length() > 0){
                     try {

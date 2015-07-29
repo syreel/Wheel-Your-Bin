@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class SendMessage extends AppCompatActivity {
@@ -20,19 +23,24 @@ public class SendMessage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_message);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayList<String> list = new ArrayList<String>();
 
         Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
         while (phones.moveToNext())
         {
             String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            Toast.makeText(getApplicationContext(),name, Toast.LENGTH_LONG).show();
 
+            list.add(name);
         }
         phones.close();
 
-        
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+
+        adapter.addAll(list);
     }
 
     @Override
