@@ -6,3 +6,10 @@
 #un-addon, #pwd-addon, #pwd2-addon {
     min-width:100px;
     text-align:left;
+}
+#topRow {
+	padding: 44px;
+}
+#background-white {
+	background-color: #ffffff;
+}
