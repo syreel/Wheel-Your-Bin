@@ -87,7 +87,7 @@ public class Transmit {
             Intent yesReceive = new Intent();
             yesReceive.setAction("MESSAGE");
             PendingIntent pendingIntentYes = PendingIntent.getBroadcast(MainActivity.getMain(), 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.addAction(R.drawable.logo, "Message Neighbour", pendingIntentYes);
+            mBuilder.addAction(R.drawable.logoclear, "Message Neighbour", pendingIntentYes);
 
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(
@@ -106,6 +106,7 @@ public class Transmit {
     }
 
     private int lastDistance;
+    private boolean wasTaken;
 
     private void checkDistances(JSONObject distances) throws JSONException {
         if(distances.getBoolean("status")){
@@ -113,16 +114,16 @@ public class Transmit {
 
                 int distance = distances.getInt("distance");
 
-                if(lastDistance != distance && distance < 10) {
+                if(lastDistance != distance && distance > 100 && !wasTaken) {
 
                     Intent resultIntent = new Intent(MainActivity.getMain(), Website.class);
 
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(MainActivity.getMain())
-                                    .setSmallIcon(R.drawable.logo)
+                                    .setSmallIcon(R.drawable.logoclear)
                                     .setColor(0xFFFF0000)
-                                    .setContentTitle("Don't forget your bin!")
-                                    .setContentText("You're walking right past it.")
+                                    .setContentTitle("Bin Taken")
+                                    .setContentText("Your bin has been removed")
                                     .setPriority(Notification.PRIORITY_MAX);
 
                     PendingIntent resultPendingIntent =
@@ -140,6 +141,7 @@ public class Transmit {
                     mNotifyMgr.notify(100, mBuilder.build());
 
                     lastDistance = distance;
+                    wasTaken = true;
                 }
             }
         }
