@@ -114,7 +114,7 @@ public class Transmit {
 
                 int distance = distances.getInt("distance");
 
-                if(lastDistance != distance && distance > 100 && !wasTaken) {
+                if(lastDistance != distance && distance > 200 && !wasTaken) {
 
                     Intent resultIntent = new Intent(MainActivity.getMain(), Website.class);
 
@@ -142,6 +142,9 @@ public class Transmit {
 
                     lastDistance = distance;
                     wasTaken = true;
+
+                }else if(wasTaken && distance < 200){
+                    wasTaken = false;
                 }
             }
         }
