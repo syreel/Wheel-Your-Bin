@@ -48,52 +48,99 @@ public class Transmit {
                     MainActivity.getMain().log(Channel.GPS, "Location data not sent");
                 }
 
-                String response = WebUtils.getTextFromPage(WebUtils.HOST+"/alerts.php&token="+MainActivity.getMain().sessionToken);
+                String response = WebUtils.getTextFromPage(WebUtils.HOST+"/getData.php?&token="+MainActivity.getMain().sessionToken+"&username="+MainActivity.getMain().username);
 
                 if(response != null && response.length() > 0){
+
                     try {
 
-                        JSONArray array = new JSONArray(response);
+                        JSONObject object = new JSONObject(response);
+                        checkAlerts(object.getJSONArray("alerts"));
+                        checkDistances(object.getJSONObject("distances"));
 
-                        for(int i = 0; i < array.length(); i++){
-
-                            JSONObject alert = array.getJSONObject(i);
-
-                            Intent resultIntent = new Intent(MainActivity.getMain(), SendMessage.class);
-
-                            NotificationCompat.Builder mBuilder =
-                                    new NotificationCompat.Builder(MainActivity.getMain())
-                                            .setSmallIcon(R.drawable.logo)
-                                            .setContentTitle(alert.getString("name"))
-                                            .setContentText(alert.getString("value"))
-                                    .setPriority(MAX_PRIORITY);
-
-                            Intent yesReceive = new Intent();
-                            yesReceive.setAction("MESSAGE");
-                            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(MainActivity.getMain(), 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-                            mBuilder.addAction(R.drawable.logo, "Message Neighbour", pendingIntentYes);
-
-                            PendingIntent resultPendingIntent =
-                                    PendingIntent.getActivity(
-                                            MainActivity.getMain(),
-                                            0,
-                                            resultIntent,
-                                            PendingIntent.FLAG_UPDATE_CURRENT
-                                    );
-
-                            mBuilder.setContentIntent(resultPendingIntent);
-
-                            NotificationManager mNotifyMgr =
-                                    (NotificationManager) MainActivity.getMain().getSystemService(MainActivity.getMain().NOTIFICATION_SERVICE);
-                            mNotifyMgr.notify(i, mBuilder.build());
-                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+
             }
         }).start();
 
+    }
+
+    private void checkAlerts(JSONArray array) throws JSONException {
+
+        for(int i = 0; i < array.length(); i++){
+
+            JSONObject alert = array.getJSONObject(i);
+
+            Intent resultIntent = new Intent(MainActivity.getMain(), SendMessage.class);
+
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(MainActivity.getMain())
+                            .setSmallIcon(R.drawable.logo)
+                            .setContentTitle(alert.getString("name"))
+                            .setContentText(alert.getString("value"))
+                            .setPriority(Notification.PRIORITY_MAX);
+
+            Intent yesReceive = new Intent();
+            yesReceive.setAction("MESSAGE");
+            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(MainActivity.getMain(), 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.addAction(R.drawable.logo, "Message Neighbour", pendingIntentYes);
+
+            PendingIntent resultPendingIntent =
+                    PendingIntent.getActivity(
+                            MainActivity.getMain(),
+                            0,
+                            resultIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) MainActivity.getMain().getSystemService(MainActivity.getMain().NOTIFICATION_SERVICE);
+            mNotifyMgr.notify(i, mBuilder.build());
+        }
+    }
+
+    private int lastDistance;
+
+    private void checkDistances(JSONObject distances) throws JSONException {
+        if(distances.getBoolean("status")){
+            if(distances.has("distance") && !distances.isNull("distance")){
+
+                int distance = distances.getInt("distance");
+
+                if(lastDistance != distance && distance < 10) {
+
+                    Intent resultIntent = new Intent(MainActivity.getMain(), Website.class);
+
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(MainActivity.getMain())
+                                    .setSmallIcon(R.drawable.logo)
+                                    .setContentTitle("Don't forget your bin!")
+                                    .setContentText("You're walking right past it.")
+                                    .setPriority(Notification.PRIORITY_MAX);
+
+                    PendingIntent resultPendingIntent =
+                            PendingIntent.getActivity(
+                                    MainActivity.getMain(),
+                                    0,
+                                    resultIntent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
+
+                    mBuilder.setContentIntent(resultPendingIntent);
+
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) MainActivity.getMain().getSystemService(MainActivity.getMain().NOTIFICATION_SERVICE);
+                    mNotifyMgr.notify(100, mBuilder.build());
+
+                    lastDistance = distance;
+                }
+            }
+        }
     }
 
     /**
