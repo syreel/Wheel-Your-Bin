@@ -1,2 +1,1 @@
-# Bin-Thing
-bin sensor
+# Wheel Your Bin
