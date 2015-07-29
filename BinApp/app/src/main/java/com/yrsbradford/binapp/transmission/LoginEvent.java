@@ -38,7 +38,7 @@ public class LoginEvent {
     public String getSessionToken(){
 
         try {
-            return this.response.getString("sessionToken");
+            return response.has("sessionToken")? response.getString("sessionToken"):null;
         } catch (JSONException e) {
             e.printStackTrace();
         }

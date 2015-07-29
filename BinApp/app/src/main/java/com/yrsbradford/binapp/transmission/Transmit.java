@@ -79,6 +79,7 @@ public class Transmit {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(MainActivity.getMain())
                             .setSmallIcon(R.drawable.logo)
+                            .setColor(0xFF5F005F)
                             .setContentTitle(alert.getString("name"))
                             .setContentText(alert.getString("value"))
                             .setPriority(Notification.PRIORITY_MAX);
@@ -119,6 +120,7 @@ public class Transmit {
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(MainActivity.getMain())
                                     .setSmallIcon(R.drawable.logo)
+                                    .setColor(0xFFFF0000)
                                     .setContentTitle("Don't forget your bin!")
                                     .setContentText("You're walking right past it.")
                                     .setPriority(Notification.PRIORITY_MAX);

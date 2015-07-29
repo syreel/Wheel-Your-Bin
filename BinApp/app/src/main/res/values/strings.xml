@@ -11,5 +11,5 @@
     <string name="name">WheelYourBin</string>
     <string name="title_activity_website">Website</string>
     <string name="logo">picture url</string>
-    <string name="title_activity_send_message">SendMessage</string>
+    <string name="title_activity_send_message">Send Message</string>
 </resources>
