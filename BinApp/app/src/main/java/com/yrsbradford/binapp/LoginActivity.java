@@ -68,6 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                                         MainActivity.getMain().username = event.getUsername();
                                         MainActivity.getMain().sessionToken = event.getSessionToken();
 
+                                        MainActivity.getMain().log(Channel.AUTH, "Session token: "+MainActivity.getMain().sessionToken);
+
                                         MainActivity.getMain().redirect(Website.class);
                                         MainActivity.getMain().startSendingData();
                                     }

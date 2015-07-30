@@ -1,0 +1,2 @@
+# The database connection file, which contains our sql server's details. Omitted for security reasons.
+/Backend/db.php

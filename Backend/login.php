@@ -14,8 +14,18 @@ $row = $SQL->fetch();
 $resp = array();
 
 if($password == $row['password']){
+	
+	$token = md5(microtime().rand());
+	
 	$resp['status'] = true;
-	$resp['sessionToken'] = "abcd";
+	$resp['sessionToken'] = $token;
+	
+	$SQL1 = $odb -> prepare("DELETE FROM binsessions where username = :username");
+	$SQL1 -> execute(array(':username' => $username));
+	
+	$SQL2 = $odb -> prepare("INSERT INTO binsessions values (:username, :token)");
+	$SQL2 -> execute(array(':username' => $username, ':token' => $token));
+	
 }else{
 	$resp['status'] = false;
 }
