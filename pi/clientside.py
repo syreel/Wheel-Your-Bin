@@ -15,10 +15,11 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #sock.connect(server_address)
 #print 'just under connect'
 #send data with sendall(), receive with recv()
+date
 while True:
 	try:
 		#send data
-		Usrname = 'Tim'
+		Usrname = '10askinsw'
 		message = str(US.reading(0))
 		#sock.sendall(message)
 		print message + 'cm'
@@ -29,4 +30,4 @@ while True:
 	finally:
 		print >>sys.stderr, 'closing socket'
 		sock.close()
-	sleep(600)
+
