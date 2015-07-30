@@ -64,42 +64,43 @@ public class Transmit {
                         e.printStackTrace();
                     }
                 }
-
             }
         }).start();
-
     }
 
     private void checkDistanceToBin() {
 
-        double distance = Math.abs(longitude - binLong) + Math.abs(latitude - binLat);
-        MainActivity.getMain().log(Channel.GPS, "Distance: " + distance);
+        if(binLocationFound) {
 
-        if(distance < 0.1){
+            double distance = Math.abs(longitude - binLong) + Math.abs(latitude - binLat);
+            MainActivity.getMain().log(Channel.GPS, "Distance: " + distance);
 
-            Intent resultIntent = new Intent(MainActivity.getMain(), Website.class);
+            if (distance < 0.1) {
 
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(MainActivity.getMain())
-                            .setSmallIcon(R.drawable.logoclear)
-                            .setColor(0xFFFF0000)
-                            .setContentTitle("Don't forget your bin")
-                            .setContentText("You're walking past it, right now.")
-                            .setPriority(Notification.PRIORITY_MAX);
+                Intent resultIntent = new Intent(MainActivity.getMain(), Website.class);
 
-            PendingIntent resultPendingIntent =
-                    PendingIntent.getActivity(
-                            MainActivity.getMain(),
-                            0,
-                            resultIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(MainActivity.getMain())
+                                .setSmallIcon(R.drawable.logoclear)
+                                .setColor(0xFFFF0000)
+                                .setContentTitle("Don't forget your bin")
+                                .setContentText("You're walking past it, right now.")
+                                .setPriority(Notification.PRIORITY_MAX);
 
-            mBuilder.setContentIntent(resultPendingIntent);
+                PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(
+                                MainActivity.getMain(),
+                                0,
+                                resultIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
 
-            NotificationManager mNotifyMgr =
-                    (NotificationManager) MainActivity.getMain().getSystemService(MainActivity.getMain().NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(100, mBuilder.build());
+                mBuilder.setContentIntent(resultPendingIntent);
+
+                NotificationManager mNotifyMgr =
+                        (NotificationManager) MainActivity.getMain().getSystemService(MainActivity.getMain().NOTIFICATION_SERVICE);
+                mNotifyMgr.notify(100, mBuilder.build());
+            }
         }
     }
 
@@ -107,12 +108,14 @@ public class Transmit {
         this.binLat = latitude;
         this.binLong = longitude;
         binLocationFound = true;
+        MainActivity.getMain().log(Channel.GPS, "Updated bin latitude: " + binLat +", longitude: "+binLong);
     }
 
     public void setBinLocation(double binLat, double binLong){
         this.binLat = binLat;
         this.binLong = binLong;
         binLocationFound = true;
+        MainActivity.getMain().log(Channel.GPS, "Updated bin latitude: " + binLat +", longitude: "+binLong);
     }
 
     private int lastDistance;

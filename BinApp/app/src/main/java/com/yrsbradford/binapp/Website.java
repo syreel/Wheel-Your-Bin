@@ -21,7 +21,7 @@ public class Website extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_website);
 
-        final Button binLocationButton = (Button) findViewById(R.id.button);
+        final Button binLocationButton = (Button) findViewById(R.id.button3);
 
         binLocationButton.setOnClickListener(new View.OnClickListener() {
 
