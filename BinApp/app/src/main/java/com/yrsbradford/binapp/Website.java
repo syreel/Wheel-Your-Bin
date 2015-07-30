@@ -18,9 +18,7 @@ public class Website extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_website);
-        
-        WebView webView = (WebView) findViewById(R.id.webView);
-        webView.loadUrl(WebUtils.HOST);
+
     }
 
     @Override

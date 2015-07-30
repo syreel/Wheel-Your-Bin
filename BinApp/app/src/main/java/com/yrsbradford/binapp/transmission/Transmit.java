@@ -78,16 +78,18 @@ public class Transmit {
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(MainActivity.getMain())
-                            .setSmallIcon(R.drawable.logo)
+                            .setSmallIcon(R.drawable.logoclear)
                             .setColor(0xFF5F005F)
                             .setContentTitle(alert.getString("name"))
                             .setContentText(alert.getString("value"))
                             .setPriority(Notification.PRIORITY_MAX);
 
+            /*
             Intent yesReceive = new Intent();
             yesReceive.setAction("MESSAGE");
             PendingIntent pendingIntentYes = PendingIntent.getBroadcast(MainActivity.getMain(), 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.addAction(R.drawable.logoclear, "Message Neighbour", pendingIntentYes);
+            */
 
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(
