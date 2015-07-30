@@ -2,10 +2,11 @@
 
 $resp = array();
 
-if(isset($_GET['username']) && isset($_GET['value'])){
+if(isset($_GET['username']) && isset($_GET['value']) && isset($_GET['type'])){
 	
 	$username = $_GET['username'];
 	$distance = $_GET['value'];
+	$type = $_GET['type'];
 
 	require 'db.php';
 	
@@ -27,12 +28,12 @@ if(isset($_GET['username']) && isset($_GET['value'])){
 	
 	if($distance > 200 && $location['distance'] < 200){
 		$send = true;
-		$message = 'Your bin has been removed!';
+		$message = 'Your ' . $type . ' bin has been removed!';
 	}
 	
 	if($distance < 200 && $location['distance'] > 200){
 		$send = true;
-		$message = 'Your bin has been returned!';
+		$message = 'Your ' . $type . ' bin has been returned!';
 	}
 	
 	if($send){
