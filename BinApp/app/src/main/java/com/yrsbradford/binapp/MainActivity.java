@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     MainActivity.getMain().username = json.get("username").toString();
                     MainActivity.getMain().sessionToken = json.get("sessionToken").toString();
 
+                    transmit.setBinLocation(json.getDouble("lat"), json.getDouble("long"));
+
                     (new Thread(){
                         public void run(){
 
@@ -214,6 +216,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         try {
             save.put("username", MainActivity.getMain().username);
             save.put("sessionToken", MainActivity.getMain().sessionToken);
+            save.put("lat", transmit.getBinLat());
+            save.put("long", transmit.getBinLong());
         } catch (JSONException e) {
             e.printStackTrace();
         }

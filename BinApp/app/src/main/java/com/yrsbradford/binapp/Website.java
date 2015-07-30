@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 
 
 public class Website extends AppCompatActivity {
@@ -18,6 +20,16 @@ public class Website extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_website);
+
+        final Button binLocationButton = (Button) findViewById(R.id.button);
+
+        binLocationButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                MainActivity.getMain().transmit.setLocationAsBin();
+            }
+        });
     }
 
     @Override

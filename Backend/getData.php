@@ -13,6 +13,7 @@ $distances = array();
 $distances['status'] = true;
 $distances['distance'] = $row['distance'];
 
+/*
 if(isset($_GET['token'])){
 
 $token = $_GET['token'];
@@ -30,8 +31,8 @@ $alert1['value'] = "One hour, twenty minutes";
 array_push($alerts, $alert1);
 
 $container['alerts'] = $alerts;
-
 }
+*/
 
 $container['distances'] = $distances;
 

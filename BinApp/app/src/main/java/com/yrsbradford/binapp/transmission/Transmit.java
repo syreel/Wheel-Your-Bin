@@ -26,7 +26,8 @@ import org.json.JSONObject;
 public class Transmit {
 
     private double longitude, latitude;
-    private boolean changed;
+    private double binLong, binLat;
+    private boolean changed, binLocationFound;
 
     public Transmit(){
 
@@ -39,6 +40,8 @@ public class Transmit {
 
         (new Thread(){
             public void run(){
+
+                checkDistanceToBin();
 
                 if(changed) {
                     sendData(longitude, latitude, sessionToken);
@@ -55,7 +58,6 @@ public class Transmit {
                     try {
 
                         JSONObject object = new JSONObject(response);
-                        checkAlerts(object.getJSONArray("alerts"));
                         checkDistances(object.getJSONObject("distances"));
 
                     } catch (JSONException e) {
@@ -68,28 +70,22 @@ public class Transmit {
 
     }
 
-    private void checkAlerts(JSONArray array) throws JSONException {
+    private void checkDistanceToBin() {
 
-        for(int i = 0; i < array.length(); i++){
+        double distance = Math.abs(longitude - binLong) + Math.abs(latitude - binLat);
+        MainActivity.getMain().log(Channel.GPS, "Distance: " + distance);
 
-            JSONObject alert = array.getJSONObject(i);
+        if(distance < 0.1){
 
-            Intent resultIntent = new Intent(MainActivity.getMain(), SendMessage.class);
+            Intent resultIntent = new Intent(MainActivity.getMain(), Website.class);
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(MainActivity.getMain())
                             .setSmallIcon(R.drawable.logoclear)
-                            .setColor(0xFF5F005F)
-                            .setContentTitle(alert.getString("name"))
-                            .setContentText(alert.getString("value"))
+                            .setColor(0xFFFF0000)
+                            .setContentTitle("Don't forget your bin")
+                            .setContentText("You're walking past it, right now.")
                             .setPriority(Notification.PRIORITY_MAX);
-
-            /*
-            Intent yesReceive = new Intent();
-            yesReceive.setAction("MESSAGE");
-            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(MainActivity.getMain(), 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.addAction(R.drawable.logoclear, "Message Neighbour", pendingIntentYes);
-            */
 
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(
@@ -103,8 +99,20 @@ public class Transmit {
 
             NotificationManager mNotifyMgr =
                     (NotificationManager) MainActivity.getMain().getSystemService(MainActivity.getMain().NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(i, mBuilder.build());
+            mNotifyMgr.notify(100, mBuilder.build());
         }
+    }
+
+    public void setLocationAsBin(){
+        this.binLat = latitude;
+        this.binLong = longitude;
+        binLocationFound = true;
+    }
+
+    public void setBinLocation(double binLat, double binLong){
+        this.binLat = binLat;
+        this.binLong = binLong;
+        binLocationFound = true;
     }
 
     private int lastDistance;
@@ -198,5 +206,21 @@ public class Transmit {
     private void sendData(double longitude, double latitude, String sessionToken){
         MainActivity.getMain().log(Channel.SEND, "Sending location data to server");
         WebUtils.sendLocationData(longitude, latitude, sessionToken);
+    }
+
+    public double getBinLong() {
+        return binLong;
+    }
+
+    public void setBinLong(double binLong) {
+        this.binLong = binLong;
+    }
+
+    public double getBinLat() {
+        return binLat;
+    }
+
+    public void setBinLat(double binLat) {
+        this.binLat = binLat;
     }
 }
