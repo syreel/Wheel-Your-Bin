@@ -146,6 +146,31 @@ public class Transmit {
                     wasTaken = true;
 
                 }else if(wasTaken && distance < 200){
+
+                    Intent resultIntent = new Intent(MainActivity.getMain(), Website.class);
+
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(MainActivity.getMain())
+                                    .setSmallIcon(R.drawable.logoclear)
+                                    .setColor(0xFF00FF00)
+                                    .setContentTitle("Bin Returned")
+                                    .setContentText("Your bin is back at home!")
+                                    .setPriority(Notification.PRIORITY_MAX);
+
+                    PendingIntent resultPendingIntent =
+                            PendingIntent.getActivity(
+                                    MainActivity.getMain(),
+                                    0,
+                                    resultIntent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
+
+                    mBuilder.setContentIntent(resultPendingIntent);
+
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) MainActivity.getMain().getSystemService(MainActivity.getMain().NOTIFICATION_SERVICE);
+                    mNotifyMgr.notify(100, mBuilder.build());
+
                     wasTaken = false;
                 }
             }
