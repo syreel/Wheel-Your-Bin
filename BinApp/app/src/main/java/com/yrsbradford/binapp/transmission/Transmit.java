@@ -27,7 +27,7 @@ public class Transmit {
 
     private double longitude, latitude;
     private double binLong, binLat;
-    private boolean changed, binLocationFound;
+    private boolean changed, binLocationFound, locationFound;
 
     public Transmit(){
 
@@ -105,23 +105,28 @@ public class Transmit {
     }
 
     public void setLocationAsBin(){
-        this.binLat = latitude;
-        this.binLong = longitude;
-        binLocationFound = true;
-        MainActivity.getMain().log(Channel.GPS, "Updated bin latitude: " + binLat +", longitude: "+binLong);
+        if(locationFound) {
+            this.binLat = latitude;
+            this.binLong = longitude;
+            binLocationFound = true;
+            MainActivity.getMain().log(Channel.GPS, "Updated bin latitude: " + binLat + ", longitude: " + binLong);
+        }else{
+            MainActivity.getMain().log(Channel.GPS, "No known location - bin location not changed");
+        }
     }
 
     public void setBinLocation(double binLat, double binLong){
         this.binLat = binLat;
         this.binLong = binLong;
         binLocationFound = true;
-        MainActivity.getMain().log(Channel.GPS, "Updated bin latitude: " + binLat +", longitude: "+binLong);
+        MainActivity.getMain().log(Channel.GPS, "Updated bin latitude: " + binLat + ", longitude: " + binLong);
     }
 
     private int lastDistance;
     private boolean wasTaken;
 
     private void checkDistances(JSONObject distances) throws JSONException {
+
         if(distances.getBoolean("status")){
             if(distances.has("distance") && !distances.isNull("distance")){
 
@@ -197,6 +202,7 @@ public class Transmit {
         this.longitude = longitude;
         this.latitude = latitude;
         changed = true;
+        locationFound = true;
         MainActivity.getMain().log(Channel.GPS, "Location data changed");
     }
 
