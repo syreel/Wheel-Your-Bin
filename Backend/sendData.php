@@ -10,15 +10,15 @@ if(isset($_GET['username']) && isset($_GET['value']) && isset($_GET['type'])){
 
 	require 'db.php';
 	
-	$SQL = $odb -> prepare("SELECT * FROM binlocations WHERE username = :username");
-	$SQL -> execute(array(':username' => $username));
+	$SQL = $odb -> prepare("SELECT * FROM binlocations WHERE username = :username AND type = :type");
+	$SQL -> execute(array(':username' => $username, ':type' => $type));
 	$location = $SQL->fetch();
 	
-	$SQL1 = $odb -> prepare("DELETE FROM binlocations WHERE username = :username");
-	$SQL1 -> execute(array(':username' => $username));
+	$SQL1 = $odb -> prepare("DELETE FROM binlocations WHERE username = :username AND type = :type");
+	$SQL1 -> execute(array(':username' => $username, ':type' => $type));
 	
-	$SQL2 = $odb -> prepare("INSERT INTO binlocations VALUES (:username, :distance)");
-	$SQL2 -> execute(array(':username' => $username, ':distance' => $distance));
+	$SQL2 = $odb -> prepare("INSERT INTO binlocations VALUES (:username, :distance, :type)");
+	$SQL2 -> execute(array(':username' => $username, ':distance' => $distance, ':type' => $type));
 	
 	$SQL3 = $odb -> prepare("SELECT * FROM binusers where username = :username");
 	$SQL3 -> execute(array(':username' => $username));
