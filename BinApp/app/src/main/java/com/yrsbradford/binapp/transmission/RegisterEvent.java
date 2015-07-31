@@ -10,11 +10,10 @@ import org.json.JSONObject;
  */
 public class RegisterEvent {
 
-    private String email, username, password, confirmPassword;
+    private String username, password, confirmPassword;
     private JSONObject response;
 
-    public RegisterEvent(String email, String username, String password, String confirmPassword) {
-        this.email = email;
+    public RegisterEvent(String username, String password, String confirmPassword) {
         this.username = username;
         this.password = password;
         this.confirmPassword = confirmPassword;
@@ -22,8 +21,7 @@ public class RegisterEvent {
 
     public void register(){
 
-        String text = WebUtils.getTextFromPage(WebUtils.HOST + "/register.php?&email="+email
-                +"&username="+username
+        String text = WebUtils.getTextFromPage(WebUtils.HOST + "/register.php?&username="+username
                 +"&password="+password
                 +"&confirmPassword="+confirmPassword);
 
@@ -32,9 +30,13 @@ public class RegisterEvent {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        System.out.println(response);
+        System.out.println(this.isValid());
+        System.out.println(this.getMessage());
     }
 
-    public boolean worked(){
+    public boolean isValid(){
 
         try {
             return response != null && response.getInt("status") == 1;
@@ -48,7 +50,7 @@ public class RegisterEvent {
     public String getMessage(){
 
         try {
-            return response != null ? response.getString("reason") : null;
+            return response != null ? response.getString("message") : null;
         } catch (JSONException e) {
             e.printStackTrace();
         }

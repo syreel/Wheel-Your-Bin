@@ -26,7 +26,6 @@ public class RegisterActivity extends ActionBarActivity {
         final TextView responseDisplay = (TextView) findViewById(R.id.responseDisplay);
         final Button registerButton = (Button) findViewById(R.id.button4);
 
-        final EditText emailField = (EditText) findViewById(R.id.email);
         final EditText usernameField = (EditText) findViewById(R.id.username);
         final EditText passwordField = (EditText) findViewById(R.id.password);
         final EditText confirmPasswordField = (EditText) findViewById(R.id.confirmPassword);
@@ -39,11 +38,11 @@ public class RegisterActivity extends ActionBarActivity {
                 (new Thread(){
                     public void run(){
 
-                        final RegisterEvent event = new RegisterEvent(emailField.getText().toString(), usernameField.getText().toString(), passwordField.getText().toString(), confirmPasswordField.getText().toString());
+                        final RegisterEvent event = new RegisterEvent(usernameField.getText().toString(), passwordField.getText().toString(), confirmPasswordField.getText().toString());
 
                         event.register();
 
-                        if(event.worked()){
+                        if(event.isValid()){
 
                             MainActivity.getMain().runOnUiThread(new Runnable() {
 
