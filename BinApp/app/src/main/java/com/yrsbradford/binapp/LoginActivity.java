@@ -90,6 +90,25 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        final Button registerButton = (Button) findViewById(R.id.register);
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                MainActivity.getMain().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        MainActivity.getMain().redirect(RegisterActivity.class);
+                    }
+
+                });
+            }
+
+        });
     }
 
     @Override
