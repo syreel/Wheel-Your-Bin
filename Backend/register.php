@@ -15,11 +15,7 @@ if(isset($_GET['username']) && isset($_GET['password']) && isset($_GET['confirmP
 		$SQL = $odb -> prepare("SELECT COUNT(*) AS NumberOfUsers FROM binusers WHERE username = :username");
 		$result = $SQL -> execute(array(':username' => $username));
 		
-		while($data=mysql_fetch_array($result)){
-			$count = $data['NumberOfUsers'];
-		}
-		
-		if($count > 0){
+		if($count['NumberOfUsers'] > 0){
 			$resp['status'] = 0;
 			$resp['message'] = 'This username is already registered!';
 		}else{
